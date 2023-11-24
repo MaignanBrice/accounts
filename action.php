@@ -13,11 +13,12 @@ if(isset($_REQUEST)) {
         /* ADD form */
         case 'add':
             addNewTransaction($_REQUEST);
-            header('Location: index.php?');
+            header('Location: index.php');
             break;                
         case 'edit':
             updateTransaction($_REQUEST);
-            header('Location: index.php?');
+            $_SESSION['action'] = 'edit';
+            header('Location: index.php');
             break;                
     }
 

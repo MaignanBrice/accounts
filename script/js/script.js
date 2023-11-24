@@ -9,6 +9,7 @@ document.querySelector('.js-table').addEventListener('click', (event) => {
                 case 'delete':
                     event.target.closest('tr').remove();
                     document.querySelector('.js-current-balance').innerHTML = `${datas.balance} €`;  
+                    createNotif('notif', datas.action);
                     break;
             }
         }
@@ -38,3 +39,18 @@ function fetchAction(node) {
             .then(response => response.json());
     };
 }
+
+
+function createNotif(type, content) {
+    const notif_node = document.getElementById(type);
+    notif_node.classList.remove('visually-hidden');
+    notif_node.innerText = content;
+    notifTimer(type);
+}
+
+function notifTimer(notiftype) {
+    if (!document.querySelector(`#${notiftype}`)) return;
+    setTimeout(function () {
+        document.querySelector(`#${notiftype}`).classList.add('visually-hidden');
+    }, 2000);
+};

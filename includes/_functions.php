@@ -1,6 +1,7 @@
 <?php
 
 require '_dbconnection.php';
+require '_notifications.php';
 
 /* Global Functions File */
 
@@ -64,6 +65,9 @@ function addNewTransaction(array $array): void
     $transaction->bindValue(':idcategory', $array['category'], PDO::PARAM_INT);
 
     $transaction->execute();
+
+    $_SESSION['action'] = 'add';
+
 }
 
 
@@ -113,17 +117,21 @@ function deleteTransactionById(int $id): void {
 
 function echoError(string $action): void
 {
+    global $error;
     echo json_encode([
         'output' => false,
-        'action' => $action
+        'action' => $error["{$action}"]
     ]);
 }
 
 function echoSuccess(string $action): void
 {
+    global $notif;
+
     echo json_encode([
         'output' => true,
-        'action' => $action,
+        'action' => $notif["{$action}"],
         'balance' => getCurrentAccountBalance()
     ]);
 }
+
