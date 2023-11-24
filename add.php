@@ -1,6 +1,18 @@
 <!DOCTYPE html>
 <html lang="fr">
 
+
+<?php
+/* DB connection */
+require_once 'includes/_dbconnection.php';
+/* Functions filem */
+require_once 'includes/_functions.php';
+/* START USER SESSION */
+session_start();
+/* TOKEN CREATION */
+generateToken();
+?>
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -35,8 +47,7 @@
             </nav>
             <form action="" class="col-12 col-md-4" role="search">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Rechercher..."
-                        aria-describedby="button-search">
+                    <input type="text" class="form-control" placeholder="Rechercher..." aria-describedby="button-search">
                     <button class="btn btn-primary" type="submit" id="button-search">
                         <i class="bi bi-search"></i>
                     </button>
@@ -51,11 +62,11 @@
                 <h1 class="my-0 fw-normal fs-4">Ajouter une opération</h1>
             </div>
             <div class="card-body">
-                <form>
+                <form method='POST' action='action.php'>
+                    <input type="hidden" name="token" value="<?= $_SESSION['token'] ?>">
                     <div class="mb-3">
                         <label for="name" class="form-label">Nom de l'opération *</label>
-                        <input type="text" class="form-control" name="name" id="name"
-                            placeholder="Facture d'électricité" required>
+                        <input type="text" class="form-control" name="name" id="name" placeholder="Facture d'électricité" required>
                     </div>
                     <div class="mb-3">
                         <label for="date" class="form-label">Date *</label>
@@ -83,7 +94,7 @@
                         </select>
                     </div>
                     <div class="text-center">
-                        <button type="submit" class="btn btn-primary btn-lg">Ajouter</button>
+                        <button type="submit" class="btn btn-primary btn-lg" name='action' value='add'>Ajouter</button>
                     </div>
                 </form>
             </div>

@@ -15,7 +15,7 @@ $itemQuery->execute();
 foreach ($itemQuery->fetchAll(PDO::FETCH_ASSOC) as $item) {
 ?>
     <tr>
-        <td width="50" class="ps-3">
+        <td width="50" class="ps-3" data-transaction-id='<?=$item['id_transaction']?>'>
             <i class="bi bi-<?= $item['icon_class'] ?> fs-3"></i>
         </td>
         <td>
@@ -38,12 +38,12 @@ foreach ($itemQuery->fetchAll(PDO::FETCH_ASSOC) as $item) {
                 </span>
         </td>
         <td class="text-end text-nowrap">
-            <a href="#" class="btn btn-outline-primary btn-sm rounded-circle">
+            <button class="btn btn-outline-primary btn-sm rounded-circle" name='action' value='edit'>
                 <i class="bi bi-pencil"></i>
-            </a>
-            <a href="#" class="btn btn-outline-danger btn-sm rounded-circle">
+            </button>
+            <button class="btn btn-outline-danger btn-sm rounded-circle" name='action' value='delete'>
                 <i class="bi bi-trash"></i>
-            </a>
+            </button>
         </td>
     </tr>
 <?php

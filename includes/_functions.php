@@ -18,12 +18,33 @@ function generateToken(): void
     };
 };
 
+
 /**
- * Undocumented function
+ * Run the basic verification for token and REFERER to avoid CSRF 
+ * injection.
+ * Redirect in case of error.
  *
+ * @param string $url
  * @return void
  */
-function getAccountBalance():int {
+function checkCSRF(string $url): void
+{
+    if (!isset($_SERVER['HTTP_REFERER']) || !str_contains($_SERVER['HTTP_REFERER'], 'http://localhost/accounts')) {
+        header('Location: ' . $url . '?error=error_referer');
+        exit;
+    } else if (!isset($_SESSION['token']) || !isset($_REQUEST['token']) || $_REQUEST['token'] !== $_SESSION['token'] || $_SESSION['tokenExpire'] < time()) {
+        header('Location: ' . $url . '?error=error_token');
+        exit;
+    }
+}
+
+/**
+ * Return the current account balance 
+ *
+ * @return int
+ */
+function getAccountBalance(): int
+{
     global $db_connect;
     $balance = $db_connect->prepare('SELECT SUM(amount) as account_balance FROM transaction WHERE MONTH(date_transaction) = MONTH(NOW()) AND YEAR(date_transaction) = 2022;');
     $balance->execute();
@@ -31,3 +52,16 @@ function getAccountBalance():int {
 }
 
 
+function addNewTransaction(array $array): void
+{
+    global $db_connect;
+
+    $transaction = $db_connect->prepare('INSERT INTO transaction (name, amount, date_transaction, id_category) VALUES (:name, :amount, :date, :idcategory);');
+
+    $transaction->bindValue(':name', $array['name'], PDO::PARAM_STR);
+    $transaction->bindValue(':amount', $array['amount'], PDO::PARAM_INT);
+    $transaction->bindValue(':date', $array['date'], PDO::PARAM_STR);
+    $transaction->bindValue(':idcategory', $array['category'], PDO::PARAM_INT);
+
+    $transaction->execute();
+}
