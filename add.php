@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Importer des opérations - Mes Comptes</title>
+    <title>Ajouter une opération - Mes Comptes</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
@@ -20,7 +20,7 @@
             <nav class="col-11 col-md-7">
                 <ul class="nav">
                     <li class="nav-item">
-                        <a href="index.html" class="nav-link link-body-emphasis">Opérations</a>
+                        <a href="index.html" class="nav-link link-secondary" aria-current="page">Opérations</a>
                     </li>
                     <li class="nav-item">
                         <a href="summary.html" class="nav-link link-body-emphasis">Synthèses</a>
@@ -29,7 +29,7 @@
                         <a href="categories.html" class="nav-link link-body-emphasis">Catégories</a>
                     </li>
                     <li class="nav-item">
-                        <a href="import.html" class="nav-link link-secondary" aria-current="page">Importer</a>
+                        <a href="import.html" class="nav-link link-body-emphasis">Importer</a>
                     </li>
                 </ul>
             </nav>
@@ -48,17 +48,42 @@
     <div class="container">
         <section class="card mb-4 rounded-3 shadow-sm">
             <div class="card-header py-3">
-                <h1 class="my-0 fw-normal fs-4">Importer des opérations</h1>
+                <h1 class="my-0 fw-normal fs-4">Ajouter une opération</h1>
             </div>
             <div class="card-body">
-                <form>  
+                <form>
                     <div class="mb-3">
-                        <label for="file" class="form-label">Fichier</label>
-                        <input type="file" accept=".csv" aria-describedby="file-help" class="form-control" name="file" id="file">
-                        <div id="file-help" class="form-text">Seul les fichiers CSV avec séparateur "," (virgule) sont supportés.</div>
+                        <label for="name" class="form-label">Nom de l'opération *</label>
+                        <input type="text" class="form-control" name="name" id="name"
+                            placeholder="Facture d'électricité" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="date" class="form-label">Date *</label>
+                        <input type="date" class="form-control" name="date" id="date" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="amount" class="form-label">Montant *</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="amount" id="amount" required>
+                            <span class="input-group-text">€</span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="category" class="form-label">Catégorie</label>
+                        <select class="form-select" name="category" id="category">
+                            <option value="" selected>Aucune catégorie</option>
+                            <option value="1">Nourriture</option>
+                            <option value="2">Loisir</option>
+                            <option value="3">Travail</option>
+                            <option value="4">Voyage</option>
+                            <option value="5">Sport</option>
+                            <option value="6">Habitat</option>
+                            <option value="7">Cadeaux</option>
+                        </select>
                     </div>
                     <div class="text-center">
-                        <button type="submit" class="btn btn-primary btn-lg">Envoyer</button>
+                        <button type="submit" class="btn btn-primary btn-lg">Ajouter</button>
                     </div>
                 </form>
             </div>
