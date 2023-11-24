@@ -4,6 +4,7 @@ $notif = [
     'delete' => '👍 Tâche supprimée',
     'down' => '👍 Tâche descendue avec succès',
     'up' => '👍 Tâche remontée avec succès',
+    'prev-month' => 'Mois suivant'
 ];
 
 $error = [

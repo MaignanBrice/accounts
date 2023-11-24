@@ -10,7 +10,7 @@ header('content-type: application/json');
 
 
 
-if(isset($_REQUEST['id'])) {
+if (isset($_REQUEST['action'])) {
 
     $id = intval(htmlspecialchars($_REQUEST['id']));
 
@@ -19,8 +19,8 @@ if(isset($_REQUEST['id'])) {
     switch ($_REQUEST['action']) {
         case 'delete':
             deleteTransactionById($id);
-            echoSuccess($_REQUEST['action']);
-            exit();
             break;
     }
+    echoSuccess($_REQUEST['action']);
+    exit();
 }

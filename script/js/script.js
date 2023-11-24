@@ -2,19 +2,21 @@
 
 
 document.querySelector('.js-table').addEventListener('click', (event) => {
-    if(!event.target.classList.contains('js-delete-btn')) return;
+    if (!event.target.classList.contains('js-delete-btn')) return;
     fetchAction(event.target).then(datas => {
-        if(datas.output) {
-            switch (event.target.dataset.action) {
+        if (datas.output) {
+            switch (datas.action) {
                 case 'delete':
                     event.target.closest('tr').remove();
-                    document.querySelector('.js-current-balance').innerHTML = `${datas.balance} €`;  
+                    document.querySelector('.js-current-balance').innerHTML = `${datas.balance} €`;
                     createNotif('notif', datas.action);
                     break;
+                /* FUTURES ACTIONS  */
             }
         }
     })
 })
+
 
 
 
@@ -40,7 +42,7 @@ function fetchAction(node) {
     };
 }
 
-
+/* Remove the hidden display for the div in charge of notification */
 function createNotif(type, content) {
     const notif_node = document.getElementById(type);
     notif_node.classList.remove('visually-hidden');
@@ -48,6 +50,7 @@ function createNotif(type, content) {
     notifTimer(type);
 }
 
+/* Times a notification display for 2sec */
 function notifTimer(notiftype) {
     if (!document.querySelector(`#${notiftype}`)) return;
     setTimeout(function () {

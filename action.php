@@ -4,8 +4,9 @@ include 'includes/_dbconnection.php';
 include 'includes/_functions.php';
 
 session_start();
-checkCSRF('index.php');
 
+
+checkCSRF('index.php');
 
 
 if(isset($_REQUEST)) {
@@ -19,7 +20,11 @@ if(isset($_REQUEST)) {
             updateTransaction($_REQUEST);
             $_SESSION['action'] = 'edit';
             header('Location: index.php');
-            break;                
+            break;   
+        case 'prev-month' :
+            $_SESSION['month'] = $_REQUEST['month'] - 1;
+            header('Location: index.php');
+            break;
     }
 
 }

@@ -6,6 +6,8 @@ require '_notifications.php';
 /* Global Functions File */
 
 
+
+
 /**
  * Set a 15 minutes session TOKEN in the superglobal $_SESSION
  * Uses MD5 encryption
@@ -52,7 +54,12 @@ function getCurrentAccountBalance(): int
     return $balance->fetchColumn();
 }
 
-
+/**
+ * Add a new transaction in the database
+ *
+ * @param array $array
+ * @return void
+ */
 function addNewTransaction(array $array): void
 {
     global $db_connect;
@@ -67,10 +74,15 @@ function addNewTransaction(array $array): void
     $transaction->execute();
 
     $_SESSION['action'] = 'add';
-
 }
 
-
+/**
+ * Return an Assoc array with all datas of a transaction
+ * Searching by her ID
+ *
+ * @param integer $id
+ * @return array
+ */
 function getTransactionByID(int $id): array
 {
     global $db_connect;
@@ -85,6 +97,36 @@ function getTransactionByID(int $id): array
     }
 }
 
+/**
+ * Return all transactions in the DB depending of a month and a year in parameter
+ * 
+ *
+ * @param integer $month
+ * @param integer $year
+ * @return array
+ */ 
+function getTranscationByMonthYear(int $month, int $year): array
+{
+    global $db_connect;
+    $itemQuery = $db_connect->prepare("SELECT * 
+                                    FROM transaction
+                                        JOIN category USING (id_category)
+                                    WHERE MONTH(date_transaction) = :month
+                                    AND YEAR(date_transaction) = :year
+                                    ORDER BY date_transaction DESC;");
+    $itemQuery->bindValue(':month', $month, PDO::PARAM_INT);
+    $itemQuery->bindValue(':year', $year, PDO::PARAM_INT);
+    $itemQuery->execute();
+
+    return $itemQuery->fetchAll(PDO::FETCH_ASSOC);
+}
+
+/**
+ * Takes an array in parameter to update a transaction
+ *
+ * @param array $item
+ * @return void
+ */
 function updateTransaction(array $item): void
 {
 
@@ -101,9 +143,19 @@ function updateTransaction(array $item): void
     $transaction->bindValue(':id_transaction', $id, PDO::PARAM_INT);
     $transaction->bindValue(':id_category', $item['category'], PDO::PARAM_INT);
     $transaction->execute();
+
+    $_SESSION['action'] = 'edit';
+
 }
 
-function deleteTransactionById(int $id): void {
+/**
+ * Delete a transaction in the database depending of her ID
+ *
+ * @param integer $id
+ * @return void
+ */
+function deleteTransactionById(int $id): void
+{
     global $db_connect;
     /* Clean ID */
     $id = intval(htmlspecialchars($id));
@@ -113,25 +165,43 @@ function deleteTransactionById(int $id): void {
     $deletion = $db_connect->prepare('DELETE FROM transaction WHERE id_transaction = :id_transaction;');
     $deletion->bindValue(':id_transaction', $id, PDO::PARAM_INT);
     $deletion->execute();
+
+    $_SESSION['action'] = 'delete';
+
 }
 
+/**
+ * Echo a json depending of the action in parameter
+ * Used in Asynchronous queries
+ *
+ * @param string $action
+ * @return void
+ */
 function echoError(string $action): void
 {
     global $error;
     echo json_encode([
         'output' => false,
-        'action' => $error["{$action}"]
+        'error' => $error["{$action}"],
+        'action' => $action
     ]);
 }
 
+/**
+ * Echo a json depending of the action in parameter
+ * Used in Asynchronous queries
+ *
+ * @param string $action
+ * @return void
+ */
 function echoSuccess(string $action): void
 {
     global $notif;
 
     echo json_encode([
         'output' => true,
-        'action' => $notif["{$action}"],
+        'notif' => $notif["{$action}"],
+        'action' => $action,
         'balance' => getCurrentAccountBalance()
     ]);
 }
-
