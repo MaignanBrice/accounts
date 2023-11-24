@@ -27,13 +27,13 @@ generateToken();
 
     <div class="container-fluid">
         <header class="row flex-wrap justify-content-between align-items-center p-3 mb-4 border-bottom">
-            <a href="index.html" class="col-1">
+            <a href="index.php" class="col-1">
                 <i class="bi bi-piggy-bank-fill text-primary fs-1"></i>
             </a>
             <nav class="col-11 col-md-7">
                 <ul class="nav">
                     <li class="nav-item">
-                        <a href="index.html" class="nav-link link-secondary" aria-current="page">Opérations</a>
+                        <a href="index.php" class="nav-link link-secondary" aria-current="page">Opérations</a>
                     </li>
                     <li class="nav-item">
                         <a href="summary.html" class="nav-link link-body-emphasis">Synthèses</a>
@@ -64,7 +64,7 @@ generateToken();
                 <h2 class="my-0 fw-normal fs-4">Solde aujourd'hui</h2>
             </div>
             <div class="card-body">
-                <p class="card-title pricing-card-title text-center fs-1"><?=getAccountBalance()?> €</p>
+                <p class="card-title pricing-card-title text-center fs-1 js-current-balance"><?=getCurrentAccountBalance()?> €</p>
             </div>
         </section>
 
@@ -73,7 +73,7 @@ generateToken();
                 <h1 class="my-0 fw-normal fs-4">Opérations de Novembre 2022</h1>
             </div>
             <div class="card-body">
-                <table class="table table-striped table-hover align-middle">
+                <table class="table table-striped table-hover align-middle js-table">
                     <thead>
                         <tr>
                             <th scope="col" colspan="2">Opération</th>
@@ -98,13 +98,13 @@ generateToken();
                             <span class="page-link">Juillet 2023</span>
                         </li>
                         <li class="page-item">
-                            <a class="page-link" href="index.html">Juin 2023</a>
+                            <a class="page-link" href="index.php">Juin 2023</a>
                         </li>
                         <li class="page-item">
                             <span class="page-link">...</span>
                         </li>
                         <li class="page-item">
-                            <a class="page-link" href="index.html">
+                            <a class="page-link" href="index.php">
                                 <i class="bi bi-arrow-right"></i>
                             </a>
                         </li>
@@ -125,6 +125,7 @@ generateToken();
     </footer>
 
 
+    <script src="script/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

@@ -7,7 +7,6 @@ session_start();
 checkCSRF('index.php');
 
 
-var_dump($_REQUEST);
 
 if(isset($_REQUEST)) {
     switch ($_REQUEST['action']) {
@@ -15,11 +14,13 @@ if(isset($_REQUEST)) {
         case 'add':
             addNewTransaction($_REQUEST);
             header('Location: index.php?');
-            break;
-
+            break;                
+        case 'edit':
+            updateTransaction($_REQUEST);
+            header('Location: index.php?');
+            break;                
     }
 
 }
-
 
 header('Location: index.php?');

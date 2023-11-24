@@ -43,10 +43,10 @@ function checkCSRF(string $url): void
  *
  * @return int
  */
-function getAccountBalance(): int
+function getCurrentAccountBalance(): int
 {
     global $db_connect;
-    $balance = $db_connect->prepare('SELECT SUM(amount) as account_balance FROM transaction WHERE MONTH(date_transaction) = MONTH(NOW()) AND YEAR(date_transaction) = 2022;');
+    $balance = $db_connect->prepare('SELECT SUM(amount) as account_balance FROM transaction;');
     $balance->execute();
     return $balance->fetchColumn();
 }
@@ -64,4 +64,66 @@ function addNewTransaction(array $array): void
     $transaction->bindValue(':idcategory', $array['category'], PDO::PARAM_INT);
 
     $transaction->execute();
+}
+
+
+function getTransactionByID(int $id): array
+{
+    global $db_connect;
+    /* Clean ID */
+    $id = intval(htmlspecialchars($id));
+
+    if (is_int($id)) {
+        $transaction = $db_connect->prepare('SELECT * FROM `transaction` JOIN category USING (id_category) WHERE id_transaction = :id;');
+        $transaction->bindValue(':id', $id, PDO::PARAM_INT);
+        $transaction->execute();
+        return $transaction->fetch(PDO::FETCH_ASSOC);
+    }
+}
+
+function updateTransaction(array $item): void
+{
+
+    global $db_connect;
+    /* Clean ID */
+    $id = intval(htmlspecialchars($item['id']));
+
+    if (!is_int($id)) return;
+
+    $transaction = $db_connect->prepare('UPDATE transaction SET name = :name, amount = :amount, date_transaction = :date_transaction, id_category = :id_category WHERE id_transaction = :id_transaction;');
+    $transaction->bindValue(':name', $item['name'], PDO::PARAM_STR);
+    $transaction->bindValue(':amount', $item['amount'], PDO::PARAM_INT);
+    $transaction->bindValue(':date_transaction', $item['date'], PDO::PARAM_STR);
+    $transaction->bindValue(':id_transaction', $id, PDO::PARAM_INT);
+    $transaction->bindValue(':id_category', $item['category'], PDO::PARAM_INT);
+    $transaction->execute();
+}
+
+function deleteTransactionById(int $id): void {
+    global $db_connect;
+    /* Clean ID */
+    $id = intval(htmlspecialchars($id));
+
+    if (!is_int($id)) return;
+
+    $deletion = $db_connect->prepare('DELETE FROM transaction WHERE id_transaction = :id_transaction;');
+    $deletion->bindValue(':id_transaction', $id, PDO::PARAM_INT);
+    $deletion->execute();
+}
+
+function echoError(string $action): void
+{
+    echo json_encode([
+        'output' => false,
+        'action' => $action
+    ]);
+}
+
+function echoSuccess(string $action): void
+{
+    echo json_encode([
+        'output' => true,
+        'action' => $action,
+        'balance' => getCurrentAccountBalance()
+    ]);
 }

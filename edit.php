@@ -17,7 +17,7 @@ generateToken();
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ajouter une opération - Mes Comptes</title>
+    <title>Modifier une opération - Mes Comptes</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
@@ -59,23 +59,25 @@ generateToken();
     <div class="container">
         <section class="card mb-4 rounded-3 shadow-sm">
             <div class="card-header py-3">
-                <h1 class="my-0 fw-normal fs-4">Ajouter une opération</h1>
+                <h1 class="my-0 fw-normal fs-4">Modifier une opération</h1>
             </div>
             <div class="card-body">
+                <?php if (isset($_GET) && strlen($_GET['id'] > 0)) $item=getTransactionByID($_GET['id']);?>
                 <form method='POST' action='action.php'>
+                    <input type="hidden" name="id" value='<?=$_GET['id']?>'>
                     <input type="hidden" name="token" value="<?= $_SESSION['token'] ?>">
                     <div class="mb-3">
                         <label for="name" class="form-label">Nom de l'opération *</label>
-                        <input type="text" class="form-control" name="name" id="name" placeholder="Facture d'électricité" required>
+                        <input type="text" class="form-control" name="name" id="name" value="<?=$item['name']?>" required>
                     </div>
                     <div class="mb-3">
                         <label for="date" class="form-label">Date *</label>
-                        <input type="date" class="form-control" name="date" id="date" required>
+                        <input type="date" class="form-control" name="date" id="date" value='<?=$item['date_transaction']?>' required>
                     </div>
                     <div class="mb-3">
                         <label for="amount" class="form-label">Montant *</label>
                         <div class="input-group">
-                            <input type="text" class="form-control" name="amount" id="amount" required>
+                            <input type="text" class="form-control" name="amount" id="amount" value="<?=$item['amount']?>" required>
                             <span class="input-group-text">€</span>
                         </div>
                     </div>
@@ -83,7 +85,7 @@ generateToken();
                     <div class="mb-3">
                         <label for="category" class="form-label">Catégorie</label>
                         <select class="form-select" name="category" id="category">
-                            <option value="" selected>Aucune catégorie</option>
+                            <option value="<?=$item['id_category']?>" selected><?=$item['category_name']?></option>
                             <option value="1">Habitat</option>
                             <option value="2">Travail</option>
                             <option value="3">Cadeaux</option>
@@ -96,7 +98,7 @@ generateToken();
                         </select>
                     </div>
                     <div class="text-center">
-                        <button type="submit" class="btn btn-primary btn-lg" name='action' value='add'>Ajouter</button>
+                        <button type="submit" class="btn btn-primary btn-lg" name='action' value='edit'>Modifier</button>
                     </div>
                 </form>
             </div>
