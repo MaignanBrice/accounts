@@ -16,6 +16,7 @@ include 'components/_head.php';
 include 'components/_header.php';
 
 ?>
+
 <body>
 
     <div class="container">
@@ -66,4 +67,5 @@ include 'components/_header.php';
     </div>
     <?php include 'components/_footer.php'; ?>
 </body>
+
 </html>

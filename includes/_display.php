@@ -7,7 +7,8 @@ require 'includes/_dbconnection.php';
 
 /* MAIN items display */
 
-function displayTransaction(array $array): void {
+function displayTransaction(array $array): void
+{
     foreach ($array as $item) {
 ?>
         <tr data-transaction-id='<?= $item['id_transaction'] ?>'>

@@ -49,8 +49,14 @@ function checkCSRF(string $url): void
 function getCurrentAccountBalance(): int
 {
     global $db_connect;
+    $db_connect->beginTransaction();
     $balance = $db_connect->prepare('SELECT SUM(amount) as account_balance FROM transaction;');
     $balance->execute();
+
+    if ($balance->rowCount() !== 1) $db_connect->rollback();
+
+    $db_connect->commit();
+
     return $balance->fetchColumn();
 }
 
@@ -64,6 +70,8 @@ function addNewTransaction(array $array): void
 {
     global $db_connect;
 
+    $db_connect->beginTransaction();
+
     $transaction = $db_connect->prepare('INSERT INTO transaction (name, amount, date_transaction, id_category) VALUES (:name, :amount, :date, :idcategory);');
 
     $transaction->bindValue(':name', $array['name'], PDO::PARAM_STR);
@@ -72,6 +80,10 @@ function addNewTransaction(array $array): void
     $transaction->bindValue(':idcategory', $array['category'], PDO::PARAM_INT);
 
     $transaction->execute();
+
+    if ($transaction->rowCount() !== 1) $db_connect->rollback();
+
+    $db_connect->commit();
 
     $_SESSION['action'] = 'add';
 }
@@ -90,9 +102,13 @@ function getTransactionByID(int $id): array
     $id = intval(htmlspecialchars($id));
 
     if (is_int($id)) {
+        $db_connect->beginTransaction();
         $transaction = $db_connect->prepare('SELECT * FROM `transaction` JOIN category USING (id_category) WHERE id_transaction = :id;');
         $transaction->bindValue(':id', $id, PDO::PARAM_INT);
         $transaction->execute();
+        if ($transaction->rowCount() !== 1) $db_connect->rollback();
+
+        $db_connect->commit();
         return $transaction->fetch(PDO::FETCH_ASSOC);
     }
 }
@@ -104,7 +120,7 @@ function getTransactionByID(int $id): array
  * @param integer $month
  * @param integer $year
  * @return array
- */ 
+ */
 function getTranscationByMonthYear(int $month, int $year): array
 {
     global $db_connect;
@@ -136,6 +152,8 @@ function updateTransaction(array $item): void
 
     if (!is_int($id)) return;
 
+    $db_connect->beginTransaction();
+
     $transaction = $db_connect->prepare('UPDATE transaction SET name = :name, amount = :amount, date_transaction = :date_transaction, id_category = :id_category WHERE id_transaction = :id_transaction;');
     $transaction->bindValue(':name', $item['name'], PDO::PARAM_STR);
     $transaction->bindValue(':amount', $item['amount'], PDO::PARAM_INT);
@@ -144,8 +162,11 @@ function updateTransaction(array $item): void
     $transaction->bindValue(':id_category', $item['category'], PDO::PARAM_INT);
     $transaction->execute();
 
-    $_SESSION['action'] = 'edit';
+    if ($transaction->rowCount() !== 1) $db_connect->rollback();
 
+    $db_connect->commit();
+
+    $_SESSION['action'] = 'edit';
 }
 
 /**
@@ -162,13 +183,19 @@ function deleteTransactionById(int $id): void
 
     if (!is_int($id)) return;
 
+    $db_connect->beginTransaction();
+
     $deletion = $db_connect->prepare('DELETE FROM transaction WHERE id_transaction = :id_transaction;');
     $deletion->bindValue(':id_transaction', $id, PDO::PARAM_INT);
     $deletion->execute();
+    if ($deletion->rowCount() !== 1) $db_connect->rollback();
+
+    $db_connect->commit();
 
     $_SESSION['action'] = 'delete';
-
 }
+
+
 
 /**
  * Echo a json depending of the action in parameter

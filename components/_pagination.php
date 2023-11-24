@@ -1,4 +1,3 @@
-
 <div class="card-footer">
     <nav class="text-center">
         <ul class="pagination d-flex justify-content-center m-2">

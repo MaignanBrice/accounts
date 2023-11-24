@@ -12,6 +12,7 @@ include 'includes/_display.php';
 include 'components/_head.php';
 include 'components/_header.php';
 
+
 ?>
 
 <body data-token='<?= $_SESSION['token'] ?>'>
@@ -28,7 +29,7 @@ include 'components/_header.php';
 
         <section class="card mb-4 rounded-3 shadow-sm">
             <div class="card-header py-3">
-                <h1 class="my-0 fw-normal fs-4">Opérations de <?=date('F Y');?></h1>
+                <h1 class="my-0 fw-normal fs-4">Opérations de <?= date('F Y'); ?></h1>
             </div>
             <div class="card-body">
                 <table class="table table-striped table-hover align-middle js-table">
